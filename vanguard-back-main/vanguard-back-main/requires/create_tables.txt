@@ -1,0 +1,69 @@
+DROP TABLE IF EXISTS vanguard_users, vanguard_blotters, vanguard_blotter_remarks, vanguard_ocr_requests;
+
+create table vanguard_users (
+    user_id BIGINT AUTO_INCREMENT NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    branch_address VARCHAR(255) NOT NULL,
+    region VARCHAR(100) NOT NULL,
+    del TINYINT NOT NULL DEFAULT 0,
+    date_created DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (user_id)
+);
+
+
+create table vanguard_blotters (
+    blotter_id BIGINT AUTO_INCREMENT NOT NULL,
+    added_by BIGINT NOT NULL,
+    blotter_number VARCHAR(50) DEFAULT NULL,
+    mv_file VARCHAR(30) DEFAULT NULL,
+    mc_file VARCHAR(30) DEFAULT NULL,
+    plate_no VARCHAR(20) DEFAULT NULL,
+    engine_no VARCHAR(30) DEFAULT NULL,
+    chassis_no VARCHAR(30) DEFAULT NULL,
+    district VARCHAR(255) DEFAULT NULL,
+    asset_model VARCHAR(255) DEFAULT NULL,
+    asset_make VARCHAR(255) DEFAULT NULL,
+    asset_year_model VARCHAR(50) DEFAULT NULL,
+    color VARCHAR(255) DEFAULT NULL,
+    bank VARCHAR(255) DEFAULT NULL,
+    mode_of_loss VARCHAR(255) DEFAULT NULL,
+    place_stolen VARCHAR(255) DEFAULT NULL,
+    datetime_stolen DATETIME DEFAULT NULL,
+    place_recovered VARCHAR(255) DEFAULT NULL,
+    datetime_recovered DATETIME DEFAULT NULL,
+    spot_report TEXT DEFAULT NULL,
+    del TINYINT NOT NULL DEFAULT 0,
+    date_created DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (blotter_id),
+    FOREIGN KEY (added_by) REFERENCES vanguard_users(user_id)
+);
+
+
+create table vanguard_blotter_remarks (
+    remarks_id BIGINT AUTO_INCREMENT NOT NULL,
+    blotter_id BIGINT NOT NULL,
+    remarked_by BIGINT DEFAULT NULL,
+    remarks TEXT NOT NULL,
+    region VARCHAR(255) NOT NULL,
+    del TINYINT NOT NULL DEFAULT 0,
+    date_created DATETIME DEFAULT NOW(),
+    PRIMARY KEY (remarks_id),
+    FOREIGN KEY (remarked_by) REFERENCES vanguard_users(user_id),
+    FOREIGN KEY (blotter_id) REFERENCES vanguard_blotters(blotter_id)
+);
+
+
+create table vanguard_ocr_requests (
+    ocr_request_id BIGINT AUTO_INCREMENT NOT NULL,
+    requested_by BIGINT NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    result TEXT NOT NULL,
+    del TINYINT NOT NULL DEFAULT 0,
+    date_created DATETIME NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (ocr_request_id),
+    FOREIGN KEY (requested_by) REFERENCES vanguard_users(user_id)
+);
